@@ -4,7 +4,7 @@ import asyncio, json, re, sys, pathlib
 import edge_tts
 
 ROOT = pathlib.Path(__file__).parent
-VOICE = "de-DE-KatjaNeural"
+VOICE = "de-DE-FlorianMultilingualNeural"
 SOURCES = [("src/Schriftlicher Ausdruck.txt", "Schreiben"), ("src/Mündlicher Ausdruck.txt", "Sprechen")]
 SKIP_START = ("Prüfungspartner", "-", "Deine", "Du:", "Gesprächspartner", "Mögliche")
 
@@ -43,7 +43,7 @@ def sections(path, cat):
 
 
 async def render(text, mp3):
-    com = edge_tts.Communicate(text, VOICE, boundary="SentenceBoundary")
+    com = edge_tts.Communicate(text, VOICE, rate="-5%", boundary="SentenceBoundary")
     cues = []
     with open(mp3, "wb") as f:
         async for ch in com.stream():
