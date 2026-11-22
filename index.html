@@ -308,10 +308,14 @@ function cardsView() {
     $("#rs").onclick = () => { all.forEach(c => delete known[c.i]); store.set("known", known); cardsView(); };
     return;
   }
-  const c = todo[0];
-  app.innerHTML = h + `<div class="card" id="cd"><div class="de">${esc(c.d)}</div><div id="back" hidden><div class="uk">${esc(c.u)}</div><div class="ex">„${esc(c.b)}“</div></div><div class="tap" id="tp">Antippen zum Umdrehen</div></div>
+  const c = todo[0], ukFirst = store.get("ukFirst", false);
+  const front = ukFirst ? `<div class="de" style="color:var(--acc)">${esc(c.u)}</div>` : `<div class="de">${esc(c.d)}</div>`;
+  const back = ukFirst ? `<div class="de" style="margin-top:16px">${esc(c.d)}</div>` : `<div class="uk">${esc(c.u)}</div>`;
+  app.innerHTML = h + `<div class="speed" style="margin-top:12px;align-items:center"><span class="muted">Vorne:</span><button data-dir="0" class="${ukFirst ? "" : "on"}">Deutsch</button><button data-dir="1" class="${ukFirst ? "on" : ""}">Українська</button></div>
+    <div class="card" id="cd">${front}<div id="back" hidden>${back}<div class="ex">„${esc(c.b)}“</div></div><div class="tap" id="tp">Antippen zum Umdrehen</div></div>
     <div class="row"><button class="icon" id="sp">🔊</button><button class="btn" id="no">Nochmal</button><button class="btn main" id="yes">Kann ich ✓</button></div>`;
   bindChips();
+  app.querySelectorAll("[data-dir]").forEach(b => b.onclick = () => { store.set("ukFirst", b.dataset.dir === "1"); cardsView(); });
   $("#cd").onclick = () => { $("#back").hidden = false; $("#tp").hidden = true; };
   $("#sp").onclick = () => say(c.d.replace(/…/g, "") + ". " + c.b);
   $("#no").onclick = cardsView;
