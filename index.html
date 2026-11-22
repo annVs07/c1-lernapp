@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Deutsch C1</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Deutsch C1">
+<meta name="theme-color" content="#1f6f5c">
+<style>
+:root{--bg:#faf8f3;--card:#fff;--ink:#1d1d1b;--mute:#6b6a65;--line:#e6e2d8;--acc:#1f6f5c;--acc2:#e3f1ec;--ok:#2e7d32;--okbg:#e5f4e6;--bad:#c62828;--badbg:#fbe7e7;--hl:#ffe9a8}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:19px/1.55 -apple-system,system-ui,"Segoe UI",Roboto,sans-serif}
+header{position:sticky;top:0;z-index:5;background:var(--bg);padding:calc(env(safe-area-inset-top) + 12px) 16px 10px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+header h1{font-size:22px;margin:0;flex:1}
+main{padding:16px 16px calc(110px + env(safe-area-inset-bottom));max-width:640px;margin:0 auto}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:6}
+nav button{flex:1;border:0;background:none;padding:10px 4px 12px;font:600 15px system-ui;color:var(--mute);display:flex;flex-direction:column;align-items:center;gap:2px}
+nav button span{font-size:26px}
+nav button.on{color:var(--acc)}
+button{font:inherit;cursor:pointer;color:inherit}
+.btn{display:block;width:100%;min-height:56px;border-radius:14px;border:2px solid var(--line);background:var(--card);font-weight:600;padding:10px 14px;margin:10px 0}
+.btn.main{background:var(--acc);border-color:var(--acc);color:#fff}
+.back{border:0;background:none;font-size:18px;color:var(--acc);font-weight:600;padding:8px 0;min-height:44px}
+h2{font-size:17px;color:var(--mute);text-transform:uppercase;letter-spacing:.04em;margin:22px 0 8px}
+.item{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:8px 0;min-height:60px;font-size:18px}
+.item .t{flex:1}
+.item .ck{color:var(--ok);font-size:20px}
+.player{position:sticky;top:62px;z-index:4;background:var(--bg);padding:6px 0 10px;border-bottom:1px solid var(--line)}
+.ctrl{display:flex;gap:10px;align-items:center;justify-content:center}
+.ctrl button{border:2px solid var(--line);background:var(--card);border-radius:50%;width:62px;height:62px;font-size:17px;font-weight:700}
+.ctrl button.play{width:84px;height:84px;background:var(--acc);border-color:var(--acc);color:#fff;font-size:34px}
+.speed{display:flex;gap:8px;justify-content:center;margin-top:10px}
+.speed button{border:2px solid var(--line);background:var(--card);border-radius:20px;padding:6px 16px;font-weight:600;min-height:44px}
+.speed button.on{background:var(--acc2);border-color:var(--acc);color:var(--acc)}
+.bar{height:6px;background:var(--line);border-radius:3px;margin-top:10px;overflow:hidden}.bar i{display:block;height:100%;background:var(--acc);width:0}
+.txt{font-size:20px;line-height:1.7;margin-top:14px}
+.txt span{border-radius:4px;padding:1px 0;cursor:pointer}
+.txt span.cur{background:var(--hl)}
+.txt span.first{font-weight:700}
+.q{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;font-size:21px;line-height:1.6;margin:12px 0}
+.q b{display:inline-block;min-width:80px;border-bottom:3px solid var(--acc);text-align:center;color:var(--acc)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opts button{min-height:60px;border-radius:14px;border:2px solid var(--line);background:var(--card);font-weight:600;font-size:18px;padding:8px}
+.opts button.ok{background:var(--okbg);border-color:var(--ok);color:var(--ok)}
+.opts button.bad{background:var(--badbg);border-color:var(--bad);color:var(--bad)}
+.fb{margin:12px 0;padding:12px 14px;border-radius:12px;font-size:18px}
+.fb.ok{background:var(--okbg);color:var(--ok)}.fb.bad{background:var(--badbg);color:var(--bad)}
+.prog{color:var(--mute);font-size:16px;display:flex;justify-content:space-between}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:26px 20px;min-height:260px;display:flex;flex-direction:column;justify-content:center;text-align:center;margin:12px 0}
+.card .de{font-size:25px;font-weight:700;line-height:1.35}
+.card .uk{font-size:21px;color:var(--acc);margin-top:16px}
+.card .ex{font-size:18px;color:var(--mute);margin-top:12px;font-style:italic}
+.card .tap{color:var(--mute);font-size:16px;margin-top:18px}
+.row{display:flex;gap:10px}.row .btn{margin:6px 0}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 8px;margin:0 -16px;padding-left:16px;padding-right:16px}
+.chips button{flex:none;border:2px solid var(--line);background:var(--card);border-radius:20px;padding:6px 14px;font-size:16px;font-weight:600;min-height:42px}
+.chips button.on{background:var(--acc2);border-color:var(--acc);color:var(--acc)}
+textarea,input{width:100%;font:inherit;border:2px solid var(--line);border-radius:12px;padding:12px;background:var(--card);color:var(--ink)}
+textarea{min-height:220px}
+.icon{border:0;background:var(--acc2);color:var(--acc);border-radius:50%;width:52px;height:52px;font-size:24px}
+.muted{color:var(--mute);font-size:16px}
+.big{font-size:44px;font-weight:800;text-align:center;margin:20px 0 4px}
+</style>
+</head>
+<body>
+<header><h1 id="ttl">🎧 Hören</h1></header>
+<main id="app"></main>
+<nav>
+  <button data-tab="hoeren" class="on"><span>🎧</span>Hören</button>
+  <button data-tab="luecken"><span>✍️</span>Lücken</button>
+  <button data-tab="woerter"><span>🃏</span>Wörter</button>
+</nav>
+<audio id="au" preload="metadata"></audio>
+<script src="texts.js"></script>
+<script src="content.js"></script>
+<script>
+const $ = s => document.querySelector(s), app = $("#app"), au = $("#au");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store = {
+  get(k, d) { try { const v = localStorage.getItem("c1_" + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem("c1_" + k, JSON.stringify(v)); } catch (e) {} }
+};
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const TEXTS = window.TEXTS || [];
+let speed = store.get("speed", 1);
+
+// ---------- Sprachausgabe (für Karten, Lücken, eigene Texte)
+let deVoice = null;
+function pickVoice() {
+  const vs = speechSynthesis.getVoices().filter(v => v.lang && v.lang.startsWith("de"));
+  deVoice = vs.find(v => /Anna|Petra|Helena|Katja|Google/.test(v.name)) || vs[0] || null;
+}
+if ("speechSynthesis" in window) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function say(text, onend, rate) {
+  if (!("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "de-DE"; if (deVoice) u.voice = deVoice; u.rate = rate || 0.95;
+  if (onend) u.onend = onend;
+  speechSynthesis.speak(u);
+}
+function stopAll() { au.pause(); if ("speechSynthesis" in window) speechSynthesis.cancel(); }
+
+// ---------- Tabs
+let tab = "hoeren";
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => {
+  stopAll(); tab = b.dataset.tab;
+  document.querySelectorAll("nav button").forEach(x => x.classList.toggle("on", x === b));
+  render(); scrollTo(0, 0);
+});
+function render() {
+  $("#ttl").textContent = { hoeren: "🎧 Hören", luecken: "✍️ Lücken", woerter: "🃏 Wörter" }[tab];
+  ({ hoeren: listView, luecken: clozeStart, woerter: cardsView })[tab]();
+}
+
+// ---------- HÖREN
+const own = () => store.get("own", []);
+function listView() {
+  const heard = store.get("heard", {});
+  const groups = [["Schreiben", "Schriftlicher Ausdruck"], ["Sprechen", "Mündlicher Ausdruck"], ["Zitate", "Zitate & Sprichwörter"]];
+  let h = "";
+  groups.forEach(([c, label]) => {
+    const list = TEXTS.filter(t => t.cat === c);
+    if (!list.length) return;
+    h += `<h2>${label}</h2>` + list.map(t => `<button class="item" data-id="${t.id}"><span class="t">${esc(t.title)}</span>${heard[t.id] ? '<span class="ck">✓</span>' : ""}</button>`).join("");
+  });
+  const o = own();
+  h += `<h2>Meine Texte</h2>` + o.map((t, i) => `<button class="item" data-own="${i}"><span class="t">${esc(t.title)}</span></button>`).join("");
+  h += `<button class="btn" id="add">＋ Eigenen Text einfügen</button>`;
+  app.innerHTML = h;
+  app.querySelectorAll("[data-id]").forEach(b => b.onclick = () => playerView(TEXTS.find(t => t.id == b.dataset.id)));
+  app.querySelectorAll("[data-own]").forEach(b => b.onclick = () => ownView(+b.dataset.own));
+  $("#add").onclick = addView;
+}
+
+function speedRow() {
+  return `<div class="speed">${[0.75, 1, 1.25].map(s => `<button data-sp="${s}" class="${s == speed ? "on" : ""}">${s}×</button>`).join("")}</div>`;
+}
+function bindSpeed(apply) {
+  app.querySelectorAll("[data-sp]").forEach(b => b.onclick = () => {
+    speed = +b.dataset.sp; store.set("speed", speed); apply();
+    app.querySelectorAll("[data-sp]").forEach(x => x.classList.toggle("on", x === b));
+  });
+}
+
+function playerView(t) {
+  const cues = t.cues || [];
+  const body = cues.length ? cues.map((c, i) => {
+    const br = i > 0 && t.body.includes("\n" + c.s.slice(0, 25)) ? "<br><br>" : "";
+    return `${br}<span data-i="${i}" class="${i === 0 ? "first" : ""}">${esc(c.s)}</span> `;
+  }).join("") : esc(t.body).replace(/\n/g, "<br><br>");
+  app.innerHTML = `<button class="back" id="bk">‹ Alle Texte</button>
+    <div class="player">
+      <div class="ctrl"><button id="rw">−10</button><button class="play" id="pp">▶</button><button id="ff">+10</button></div>
+      ${speedRow()}<div class="bar"><i id="pg"></i></div>
+    </div>
+    <div class="txt" id="tx">${body}</div>`;
+  if (au.dataset.src !== t.audio) { au.src = t.audio; au.dataset.src = t.audio; }
+  au.playbackRate = speed;
+  const pp = $("#pp"), spans = [...app.querySelectorAll("#tx span")];
+  let cur = -1;
+  const ui = () => {
+    pp.textContent = au.paused ? "▶" : "❚❚";
+    if (au.duration) $("#pg").style.width = (au.currentTime / au.duration * 100) + "%";
+    let i = -1; for (let k = 0; k < cues.length && cues[k].t <= au.currentTime + 0.05; k++) i = k;
+    if (i !== cur) {
+      if (spans[cur]) spans[cur].classList.remove("cur");
+      cur = i;
+      if (spans[cur]) { spans[cur].classList.add("cur"); const r = spans[cur].getBoundingClientRect(); if (r.top < 260 || r.bottom > innerHeight - 110) spans[cur].scrollIntoView({ block: "center", behavior: "smooth" }); }
+    }
+  };
+  au.ontimeupdate = ui; au.onplay = ui; au.onpause = ui;
+  au.onended = () => { const h = store.get("heard", {}); h[t.id] = 1; store.set("heard", h); ui(); };
+  pp.onclick = () => { au.paused ? au.play() : au.pause(); };
+  $("#rw").onclick = () => au.currentTime = Math.max(0, au.currentTime - 10);
+  $("#ff").onclick = () => au.currentTime = Math.min(au.duration || 0, au.currentTime + 10);
+  spans.forEach(s => s.onclick = () => { au.currentTime = cues[+s.dataset.i].t; au.play(); });
+  bindSpeed(() => au.playbackRate = speed);
+  $("#bk").onclick = () => { au.pause(); listView(); };
+  if ("mediaSession" in navigator) {
+    navigator.mediaSession.metadata = new MediaMetadata({ title: t.title, artist: "Deutsch C1", artwork: [{ src: "icon-512.png", sizes: "512x512", type: "image/png" }] });
+    navigator.mediaSession.setActionHandler("seekbackward", () => au.currentTime -= 10);
+    navigator.mediaSession.setActionHandler("seekforward", () => au.currentTime += 10);
+  }
+  ui();
+}
+
+function addView() {
+  app.innerHTML = `<button class="back" id="bk">‹ Zurück</button>
+    <h2>Neuer Text</h2>
+    <input id="ti" placeholder="Titel (z. B. Thema Umwelt)">
+    <p class="muted">Text hier einfügen (kopieren & einfügen):</p>
+    <textarea id="tb"></textarea>
+    <button class="btn main" id="sv">Speichern</button>`;
+  $("#bk").onclick = listView;
+  $("#sv").onclick = () => {
+    const body = $("#tb").value.trim(); if (!body) return;
+    const o = own(); o.push({ title: $("#ti").value.trim() || body.slice(0, 40) + "…", body }); store.set("own", o);
+    ownView(o.length - 1);
+  };
+}
+
+function ownView(idx) {
+  const t = own()[idx];
+  const sents = t.body.replace(/\s+/g, " ").match(/[^.!?…]+[.!?…“"]*\s*/g) || [t.body];
+  app.innerHTML = `<button class="back" id="bk">‹ Alle Texte</button>
+    <div class="player">
+      <div class="ctrl"><button id="rw">⏮</button><button class="play" id="pp">▶</button><button id="ff">⏭</button></div>
+      ${speedRow()}
+    </div>
+    <div class="txt" id="tx"><span class="first">${esc(t.title)}</span><br><br>${sents.map((s, i) => `<span data-i="${i}">${esc(s)}</span>`).join("")}</div>
+    <p class="muted">Tipp: Bildschirm anlassen, sonst stoppt das Vorlesen.</p>
+    <button class="btn" id="del">Text löschen</button>`;
+  const spans = [...app.querySelectorAll("#tx span[data-i]")], pp = $("#pp");
+  let i = 0, playing = false;
+  const mark = () => spans.forEach((s, k) => s.classList.toggle("cur", k === i && playing));
+  const go = () => {
+    if (i >= sents.length) { playing = false; i = 0; pp.textContent = "▶"; mark(); return; }
+    playing = true; pp.textContent = "❚❚"; mark();
+    spans[i].scrollIntoView({ block: "center", behavior: "smooth" });
+    say(sents[i], () => { if (playing) { i++; go(); } }, 0.95 * speed);
+  };
+  const stop = () => { playing = false; speechSynthesis.cancel(); pp.textContent = "▶"; mark(); };
+  pp.onclick = () => playing ? stop() : go();
+  $("#rw").onclick = () => { i = Math.max(0, i - 1); if (playing) { playing = false; speechSynthesis.cancel(); go(); } else mark(); };
+  $("#ff").onclick = () => { i = Math.min(sents.length - 1, i + 1); if (playing) { playing = false; speechSynthesis.cancel(); go(); } else mark(); };
+  spans.forEach(s => s.onclick = () => { playing = false; speechSynthesis.cancel(); i = +s.dataset.i; go(); });
+  bindSpeed(() => { if (playing) { playing = false; speechSynthesis.cancel(); go(); } });
+  $("#bk").onclick = () => { stop(); listView(); };
+  $("#del").onclick = () => { if (!confirm("Diesen Text löschen?")) return; stop(); const o = own(); o.splice(idx, 1); store.set("own", o); listView(); };
+}
+
+// ---------- LÜCKEN
+function ownGapItems() {
+  const sents = [];
+  TEXTS.forEach(t => (t.cues || []).forEach(c => sents.push(c.s)));
+  own().forEach(t => (t.body.match(/[^.!?]+[.!?]/g) || []).forEach(s => sents.push(s.trim())));
+  const items = [];
+  (window.OWN_GAPS || []).forEach(([w, wrong]) => {
+    const re = new RegExp("(^|[^A-Za-zÄÖÜäöüß])" + w + "(?![A-Za-zÄÖÜäöüß])");
+    const hits = sents.filter(s => re.test(s) && s.length < 220);
+    if (hits.length) {
+      const s = hits[Math.random() * hits.length | 0];
+      items.push({ s: s.replace(re, "$1___"), a: w, o: wrong, h: "Aus deinen Texten", full: s });
+    }
+  });
+  return items;
+}
+function clozeStart() {
+  const best = store.get("best", null);
+  app.innerHTML = `<p style="font-size:20px">10 Sätze. Tippe das passende Wort an.</p>
+    <button class="btn main" id="mix">Gemischt starten</button>
+    <button class="btn" id="mine">Nur aus meinen Texten</button>
+    <button class="btn" id="gram">Nur Grammatik & Redemittel</button>
+    ${best !== null ? `<p class="muted">Letztes Ergebnis: ${best} / 10</p>` : ""}`;
+  const start = pool => clozeRound(shuffle(pool).slice(0, 10));
+  $("#mix").onclick = () => { const a = shuffle(ownGapItems()).slice(0, 5); start([...a, ...shuffle(window.CLOZE).slice(0, 10 - a.length)]); };
+  $("#mine").onclick = () => start(ownGapItems());
+  $("#gram").onclick = () => start(window.CLOZE);
+}
+function clozeRound(items) {
+  let n = 0, score = 0;
+  const show = () => {
+    if (n >= items.length) {
+      store.set("best", score);
+      app.innerHTML = `<div class="big">${score} / ${items.length}</div><p style="text-align:center">${score >= 8 ? "Super! 🎉" : score >= 5 ? "Gut gemacht! 👍" : "Weiter üben – das wird! 💪"}</p>
+        <button class="btn main" id="again">Nochmal</button>`;
+      $("#again").onclick = clozeStart; return;
+    }
+    const it = items[n], opts = shuffle([it.a, ...it.o]);
+    app.innerHTML = `<div class="prog"><span>Frage ${n + 1} / ${items.length}</span><span>✓ ${score}</span></div>
+      <div class="bar"><i style="width:${n / items.length * 100}%"></i></div>
+      <div class="q">${esc(it.s).replace("___", "<b>&nbsp;?&nbsp;</b>")}</div>
+      <div class="opts">${opts.map(o => `<button>${esc(o)}</button>`).join("")}</div><div id="after"></div>`;
+    app.querySelectorAll(".opts button").forEach(b => b.onclick = () => {
+      if (app.querySelector(".opts .ok")) return;
+      const right = b.textContent === it.a;
+      if (right) score++;
+      app.querySelectorAll(".opts button").forEach(x => { if (x.textContent === it.a) x.classList.add("ok"); else if (x === b) x.classList.add("bad"); });
+      const full = it.full || it.s.replace("___", it.a);
+      app.querySelector(".q").innerHTML = esc(full);
+      $("#after").innerHTML = `<div class="fb ${right ? "ok" : "bad"}">${right ? "Richtig! ✓" : "Richtig ist: <b>" + esc(it.a) + "</b>"}<br><span style="font-size:16px">${esc(it.h)}</span></div>
+        <div class="row"><button class="icon" id="sp">🔊</button><button class="btn main" id="nx">Weiter</button></div>`;
+      say(full);
+      $("#sp").onclick = () => say(full);
+      $("#nx").onclick = () => { speechSynthesis.cancel(); n++; show(); };
+    });
+  };
+  show();
+}
+
+// ---------- WÖRTER
+let cat = "Alle";
+function cardsView() {
+  const known = store.get("known", {});
+  const cats = ["Alle", ...new Set(window.CARDS.map(c => c.k))];
+  const all = window.CARDS.map((c, i) => ({ ...c, i })).filter(c => cat === "Alle" || c.k === cat);
+  const todo = shuffle(all.filter(c => !known[c.i]));
+  const done = all.length - todo.length;
+  let h = `<div class="chips">${cats.map(c => `<button class="${c === cat ? "on" : ""}">${esc(c)}</button>`).join("")}</div>
+    <div class="prog"><span>${done} / ${all.length} gelernt</span></div><div class="bar"><i style="width:${done / all.length * 100}%"></i></div>`;
+  if (!todo.length) {
+    app.innerHTML = h + `<div class="big">🎉</div><p style="text-align:center">Alle Karten hier gelernt!</p><button class="btn main" id="rs">Nochmal von vorn</button>`;
+    bindChips();
+    $("#rs").onclick = () => { all.forEach(c => delete known[c.i]); store.set("known", known); cardsView(); };
+    return;
+  }
+  const c = todo[0];
+  app.innerHTML = h + `<div class="card" id="cd"><div class="de">${esc(c.d)}</div><div id="back" hidden><div class="uk">${esc(c.u)}</div><div class="ex">„${esc(c.b)}“</div></div><div class="tap" id="tp">Antippen zum Umdrehen</div></div>
+    <div class="row"><button class="icon" id="sp">🔊</button><button class="btn" id="no">Nochmal</button><button class="btn main" id="yes">Kann ich ✓</button></div>`;
+  bindChips();
+  $("#cd").onclick = () => { $("#back").hidden = false; $("#tp").hidden = true; };
+  $("#sp").onclick = () => say(c.d.replace(/…/g, "") + ". " + c.b);
+  $("#no").onclick = cardsView;
+  $("#yes").onclick = () => { known[c.i] = 1; store.set("known", known); cardsView(); };
+}
+function bindChips() {
+  app.querySelectorAll(".chips button").forEach(b => b.onclick = () => { cat = b.textContent; cardsView(); });
+}
+
+render();
+</script>
+</body>
+</html>
