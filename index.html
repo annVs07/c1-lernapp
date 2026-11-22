@@ -157,7 +157,8 @@ function playerView(t) {
       <div class="ctrl"><button id="rw">−10</button><button class="play" id="pp">▶</button><button id="ff">+10</button></div>
       ${speedRow()}<div class="bar"><i id="pg"></i></div>
     </div>
-    <div class="txt" id="tx">${body}</div>`;
+    <div class="txt" id="tx">${body}</div>
+    <p class="muted" id="nxt"></p>`;
   if (au.dataset.src !== t.audio) { au.src = t.audio; au.dataset.src = t.audio; }
   au.playbackRate = speed;
   const pp = $("#pp"), spans = [...app.querySelectorAll("#tx span")];
@@ -173,7 +174,11 @@ function playerView(t) {
     }
   };
   au.ontimeupdate = ui; au.onplay = ui; au.onpause = ui;
-  au.onended = () => { const h = store.get("heard", {}); h[t.id] = 1; store.set("heard", h); ui(); };
+  const ORDER = ["Schreiben", "Sprechen", "Zitate"].flatMap(c => TEXTS.filter(x => x.cat === c));
+  const pos = ORDER.indexOf(t), next = ORDER[pos + 1], prev = ORDER[pos - 1];
+  const jump = x => { if (!x) return; playerView(x); au.play().catch(() => {}); scrollTo(0, 0); };
+  $("#nxt").textContent = next ? "Danach automatisch: " + next.title : "Letzter Text.";
+  au.onended = () => { const h = store.get("heard", {}); h[t.id] = 1; store.set("heard", h); ui(); jump(next); };
   pp.onclick = () => { au.paused ? au.play() : au.pause(); };
   $("#rw").onclick = () => au.currentTime = Math.max(0, au.currentTime - 10);
   $("#ff").onclick = () => au.currentTime = Math.min(au.duration || 0, au.currentTime + 10);
@@ -184,6 +189,7 @@ function playerView(t) {
     navigator.mediaSession.metadata = new MediaMetadata({ title: t.title, artist: "Deutsch C1", artwork: [{ src: "icon-512.png", sizes: "512x512", type: "image/png" }] });
     navigator.mediaSession.setActionHandler("seekbackward", () => au.currentTime -= 10);
     navigator.mediaSession.setActionHandler("seekforward", () => au.currentTime += 10);
+    try { navigator.mediaSession.setActionHandler("nexttrack", next ? () => jump(next) : null); navigator.mediaSession.setActionHandler("previoustrack", prev ? () => jump(prev) : null); } catch (e) {}
   }
   ui();
 }
