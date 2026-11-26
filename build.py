@@ -5,8 +5,8 @@ import edge_tts
 
 ROOT = pathlib.Path(__file__).parent
 VOICE = "de-DE-FlorianMultilingualNeural"
-SOURCES = [("src/Schriftlicher Ausdruck.txt", "Schreiben"), ("src/Mündlicher Ausdruck.txt", "Sprechen")]
-SKIP_START = ("Prüfungspartner", "-", "Deine", "Du:", "Gesprächspartner", "Mögliche")
+SOURCES = [("src/Schriftlicher Ausdruck.txt", "Schreiben"), ("src/Mündlicher Ausdruck.txt", "Sprechen"), ("src/Texte.txt", "Neu")]
+SKIP_START = ("Guten Tag", "Prüfungspartner", "-", "Deine", "Du:", "Gesprächspartner", "Mögliche")
 
 
 def clean(l):
@@ -27,7 +27,12 @@ def sections(path, cat):
         nxt = next_nonblank(i)
         title, c = None, cat
         if re.match(r"^(Und noch )?Thema\b", l):
-            title = re.sub(r"^(Und noch )?Thema( \d+)?:?\s*", "", l)
+            title = re.sub(r"^(Und noch )?Thema( \d+)?:?\s*\*?", "", l)
+        elif cat == "Neu":
+            if l.startswith("PRÜFUNGSSIMULATION"):
+                title = "Diskussion: " + l.split("DISKUSSION", 1)[-1].strip().replace('"', "„", 1).replace('"', "“", 1)
+            elif l == "Vorstellung":
+                title = "Vorstellung (über mich)"
         elif l.startswith("„") and l.endswith("“") and any(x.startswith("Mögliche Bedeutung") for x in upcoming(i)):
             title, c = l, "Zitate"
         elif l and len(l) < 130 and not l.endswith(":") and not l.startswith(SKIP_START) and len(nxt) > 150 and not prev.startswith("„"):

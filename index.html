@@ -120,7 +120,7 @@ function render() {
 const own = () => store.get("own", []);
 function listView() {
   const heard = store.get("heard", {});
-  const groups = [["Schreiben", "Schriftlicher Ausdruck"], ["Sprechen", "Mündlicher Ausdruck"], ["Zitate", "Zitate & Sprichwörter"]];
+  const groups = [["Neu", "Neue Texte"], ["Schreiben", "Schriftlicher Ausdruck"], ["Sprechen", "Mündlicher Ausdruck"], ["Zitate", "Zitate & Sprichwörter"]];
   let h = "";
   groups.forEach(([c, label]) => {
     const list = TEXTS.filter(t => t.cat === c);
@@ -174,7 +174,7 @@ function playerView(t) {
     }
   };
   au.ontimeupdate = ui; au.onplay = ui; au.onpause = ui;
-  const ORDER = ["Schreiben", "Sprechen", "Zitate"].flatMap(c => TEXTS.filter(x => x.cat === c));
+  const ORDER = ["Neu", "Schreiben", "Sprechen", "Zitate"].flatMap(c => TEXTS.filter(x => x.cat === c));
   const pos = ORDER.indexOf(t), next = ORDER[pos + 1], prev = ORDER[pos - 1];
   const jump = x => { if (!x) return; playerView(x); au.play().catch(() => {}); scrollTo(0, 0); };
   $("#nxt").textContent = next ? "Danach automatisch: " + next.title : "Letzter Text.";
